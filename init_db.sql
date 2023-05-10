@@ -1,0 +1,3 @@
+CREATE DATABASE homeliv;
+CREATE DATABASE homejob;
+CREATE DATABASE home4hope;

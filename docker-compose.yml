@@ -1,0 +1,79 @@
+version: '3.1'
+
+services:
+  node:
+    image: node:18-alpine
+    command: sleep infinity
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./share/redis:/var/lib/redis/data
+# Server Api -------------------------------------------------------------------
+  homeLab:
+    depends_on:
+      - node
+      # - postgres
+      - redis
+    image: node:18-alpine
+    command: sh -c "yarn install && yarn build && yarn start"
+    ports:
+      - 7001:7001
+    working_dir: /HomeLab-ai-api
+    volumes:
+      - ../HomeLab-ai-api:/HomeLab-ai-api
+
+  home4hopeApi:
+    depends_on:
+      - node
+      # - postgres
+      - redis
+    image: node:18-alpine
+    command: sh -c "yarn install && yarn build && yarn migration:run && yarn start"
+    ports:
+      - 8001:8001
+    working_dir: /Home4Hope-api
+    volumes:
+      - ../Home4Hope-api:/Home4Hope-api
+
+  homeLivApi:
+    depends_on:
+      - node
+      # - postgres
+      - redis
+    image: node:18-alpine
+    command: sh -c "yarn install && yarn build && yarn migration:run && yarn start"
+    ports:
+      - 9001:9001
+    working_dir: /HomeLiv-api
+    volumes:
+      - ../HomeLiv-api:/HomeLiv-api
+
+  # homeJob:
+  #   depends_on:
+  #     - node
+  #   image: node:18-alpine
+  #   command: sh -c "yarn install && yarn build && yarn start"
+  #   ports:
+  #     - 6001:6001
+  #   working_dir: /HomeJob-api
+  #   volumes:
+  #     - ../HomeJob-api:/HomeJob-api
+# Server Api -------------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./share/postgres:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 123456
+
+volumes:
+  postgres: 
+  redis:
+    
