@@ -62,6 +62,19 @@ services:
   #   volumes:
   #     - ../HomeJob-api:/HomeJob-api
 # Server Api -------------------------------------------------------------------
+# Client -----------------------------------------------------------------------
+  landingPage: 
+    depends_on:
+      - node
+    image: node:18-alpine
+    command: sh -c "yarn install && yarn build && yarn start:prod"
+    ports:
+      - 1001:1001
+    working_dir: /landing-page
+    volumes:
+      - ../landing-page:/landing-page
+# Client -----------------------------------------------------------------------
+  
   postgres:
     image: postgres:15-alpine
     ports:
@@ -72,11 +85,6 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
-  index:
-    build:
-      context: ./index-page
-    ports:
-      - 8080:8080
 
   nginx:
     image: nginx:1.23.4-alpine
