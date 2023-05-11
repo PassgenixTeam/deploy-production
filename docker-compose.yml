@@ -40,7 +40,6 @@ services:
       - ../Home4Hope-api:/Home4Hope-api
     environment:
       - PORT=8001
-      - HOST=api.home4hope.passgenix.com
 
   homeLivApi:
     depends_on:
@@ -56,7 +55,6 @@ services:
       - ../HomeLiv-api:/HomeLiv-api
     environment:
       - PORT=9001
-      - HOST=api.homeliv.passgenix.com
   # homeJob:
   #   depends_on:
   #     - node
@@ -83,6 +81,19 @@ services:
       - ../landing-page:/landing-page
     environment:
       - PORT=1001
+
+  homeLabPage: 
+    depends_on:
+      - node
+    image: node:18-alpine
+    command: sh -c "yarn install && yarn build && yarn start:prod"
+    ports:
+      - 2001:2001
+    working_dir: /home-lab-ai 
+    volumes:
+      - ../home-lab-ai:/home-lab-ai 
+    environment:
+      - PORT=2001
 # Client -----------------------------------------------------------------------
   
   postgres:
