@@ -24,7 +24,8 @@ services:
     working_dir: /HomeLab-ai-api
     volumes:
       - ../HomeLab-ai-api:/HomeLab-ai-api
-
+    environment:
+      - PORT=7001
   home4HopeApi:
     depends_on:
       - node
@@ -37,6 +38,9 @@ services:
     working_dir: /Home4Hope-api
     volumes:
       - ../Home4Hope-api:/Home4Hope-api
+    environment:
+      - PORT=8001
+      - HOST=api.home4hope.passgenix.com
 
   homeLivApi:
     depends_on:
@@ -50,7 +54,9 @@ services:
     working_dir: /HomeLiv-api
     volumes:
       - ../HomeLiv-api:/HomeLiv-api
-
+    environment:
+      - PORT=9001
+      - HOST=api.homeliv.passgenix.com
   # homeJob:
   #   depends_on:
   #     - node
@@ -61,6 +67,8 @@ services:
   #   working_dir: /HomeJob-api
   #   volumes:
   #     - ../HomeJob-api:/HomeJob-api
+    # environment:
+    #   - PORT=6001
 # Server Api -------------------------------------------------------------------
 # Client -----------------------------------------------------------------------
   landingPage: 
@@ -73,6 +81,8 @@ services:
     working_dir: /landing-page
     volumes:
       - ../landing-page:/landing-page
+    environment:
+      - PORT=1001
 # Client -----------------------------------------------------------------------
   
   postgres:
