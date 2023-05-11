@@ -10,28 +10,28 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./share/redis:/var/lib/redis/data
+      - ./shared/redis:/var/lib/redis/data
 # Server Api -------------------------------------------------------------------
-  homeLab:
+  homeLabApi:
     depends_on:
       - node
       # - postgres
       - redis
     image: node:18-alpine
-    command: sh -c "yarn install && yarn build && yarn start"
+    command: sh -c "yarn install && yarn build && yarn start:prod"
     ports:
       - 7001:7001
     working_dir: /HomeLab-ai-api
     volumes:
       - ../HomeLab-ai-api:/HomeLab-ai-api
 
-  home4hopeApi:
+  home4HopeApi:
     depends_on:
       - node
       # - postgres
       - redis
     image: node:18-alpine
-    command: sh -c "yarn install && yarn build && yarn migration:run && yarn start"
+    command: sh -c "yarn install && yarn build && yarn migration:run && yarn start:prod"
     ports:
       - 8001:8001
     working_dir: /Home4Hope-api
@@ -44,7 +44,7 @@ services:
       # - postgres
       - redis
     image: node:18-alpine
-    command: sh -c "yarn install && yarn build && yarn migration:run && yarn start"
+    command: sh -c "yarn install && yarn build && yarn migration:run && yarn start:prod"
     ports:
       - 9001:9001
     working_dir: /HomeLiv-api
@@ -55,7 +55,7 @@ services:
   #   depends_on:
   #     - node
   #   image: node:18-alpine
-  #   command: sh -c "yarn install && yarn build && yarn start"
+  #   command: sh -c "yarn install && yarn build && yarn start:prod"
   #   ports:
   #     - 6001:6001
   #   working_dir: /HomeJob-api
@@ -67,11 +67,23 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./share/postgres:/var/lib/postgresql/data
+      - ./shared/postgres:/var/lib/postgresql/data
       - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
+  index:
+    build:
+      context: ./index-page
+    ports:
+      - 8080:8080
+
+  nginx:
+    image: nginx:1.23.4-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
 volumes:
   postgres: 
