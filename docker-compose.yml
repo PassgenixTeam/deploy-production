@@ -56,18 +56,33 @@ services:
       - ../HomeLiv-api:/HomeLiv-api
     environment:
       - PORT=9001
-  # homeJob:
-  #   depends_on:
-  #     - node
-  #   image: node:18-alpine
-  #   command: sh -c "yarn install && yarn build && yarn start:prod"
-  #   ports:
-  #     - 6001:6001
-  #   working_dir: /HomeJob-api
-  #   volumes:
-  #     - ../HomeJob-api:/HomeJob-api
-    # environment:
-    #   - PORT=6001
+
+  homeJobApi:
+    depends_on:
+      - node
+    image: node:18-alpine
+    command: sh -c "yarn install && cp .production.env .env && yarn build && yarn migration:run && yarn start:prod"
+    ports:
+      - 6001:6001
+    working_dir: /HomeJob-api
+    volumes:
+      - ../HomeJob-api:/HomeJob-api
+    environment:
+      - PORT=6001
+  homeJob:
+    depends_on:
+      - node
+    image: node:18-alpine
+    command: sh -c "yarn install && cp .production.env .env && yarn build && yarn start"
+    ports:
+      - 3001:3001
+    working_dir: /HomeJob
+    volumes:
+      - ../HomeJob:/HomeJob
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=api.homejob.passgenix.com
+      - NEXT_PUBLIC_FRONTEND_URL=homejob.passgenix.com
+      - NEXT_PUBLIC_PORT=3001
 # Server Api -------------------------------------------------------------------
 # Client -----------------------------------------------------------------------
   landingPage: 
